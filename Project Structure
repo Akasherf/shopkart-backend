@@ -1,0 +1,10 @@
+src/main/java/com/ecommerce_backend
+│
+├── controller     # REST APIs
+├── service        # Business logic
+├── repository     # JPA repositories
+├── model          # Entities
+├── dto            # Request/Response DTOs
+├── security       # JWT, filters, config
+├── exception      # Global exception handling
+└── config         # Swagger & app configs
