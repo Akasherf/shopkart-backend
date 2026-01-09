@@ -1,0 +1,100 @@
+Akash Kumar
+--------------------------------------------
+
+# 🏗️ ARCHITECTURE.md
+
+# ShopKart – Backend Architecture
+
+## 1. Architecture Style
+- Layered Monolithic Architecture
+- Clean separation of concerns
+- Designed for future microservice migration
+
+---
+
+## 2. High-Level Flow
+
+Client  
+→ Controller  
+→ Service  
+→ Repository  
+→ Database  
+
+Security & Filters run **before controllers**.
+
+---
+
+## 3. Core Layers
+
+### Controller Layer
+- Handles HTTP requests
+- Validates input
+- Delegates to service layer
+- Returns standardized ApiResponse
+
+### Service Layer
+- Contains all business rules
+- Enforces order/payment state transitions
+- Transaction-managed (@Transactional)
+
+### Repository Layer
+- JPA repositories
+- No business logic
+- Database interaction only
+
+---
+
+## 4. Security Architecture
+
+- JWT Authentication Filter
+- Stateless session management
+- Role-based authorization
+- Swagger JWT integration
+
+Flow: Request → JWT Filter → Security Context → Controller
+
+---
+
+## 5. Order & Payment Consistency
+
+### Design Principles
+- One Order ↔ One Payment
+- Idempotent payment confirmation
+- Strong consistency using DB transactions
+
+### Payment Confirmation Logic
+1. Fetch payment by reference
+2. Return early if already SUCCESS
+3. Verify with payment gateway
+4. Update payment + order atomically
+5. Prevent duplicate or invalid state changes
+
+---
+
+## 6. Exception Handling
+
+- GlobalExceptionHandler
+- Custom domain exceptions
+- Unified error response format
+
+---
+
+## 7. Docker Architecture
+
+Docker Compose
+│
+├── shopkart-app (Spring Boot)
+└── shopkart-mysql (MySQL 8)
+
+- Isolated containers
+- Persistent DB volume
+- Environment-based configuration
+
+---
+
+## 8. Scalability Considerations
+
+- Kafka for async events (future)
+- Payment & Order services can be extracted
+- Read replicas for reporting
+
